@@ -1,0 +1,105 @@
+==========================
+DOCKER QUICK START GUIDE
+==========================
+
+1. INSTALL DOCKER
+------------------
+- Download Docker from: https://www.docker.com/products/docker-desktop
+- Install it, then open terminal and check:
+  docker --version
+
+
+2. SETUP PROJECT FOLDER
+------------------------
+Create a folder like this:
+
+  my_project/
+    ├── app.py
+    ├── requirements.txt
+    └── Dockerfile
+
+
+3. CREATE requirements.txt
+---------------------------
+List your Python packages:
+  flask
+  pandas
+  numpy
+  # Add more if needed
+
+
+4. CREATE Dockerfile
+---------------------
+Inside your project folder, make a file named Dockerfile and add:
+
+  FROM python:3.10-slim
+  WORKDIR /app
+  COPY . .
+  RUN pip install --no-cache-dir -r requirements.txt
+  EXPOSE 5000
+  CMD ["python", "app.py"]
+
+
+5. (OPTIONAL) CREATE .dockerignore
+----------------------------------
+Make a .dockerignore file to skip copying junk:
+
+  __pycache__
+  *.pyc
+  .env
+  .git
+
+
+6. BUILD THE DOCKER IMAGE
+--------------------------
+In terminal, go to your project folder and run:
+
+  docker buildx build -t <your_app_name> .
+
+
+7. TAG THE DOCKER IMAGE
+------------------------
+Tag the image with your Docker Hub username:
+
+  docker tag <your_app_name> <dockerhub_username>/<your_app_name>:latest
+
+
+8. PUSH THE IMAGE TO DOCKER HUB
+-------------------------------
+Login to Docker Hub:
+
+  docker login
+
+Then push your image:
+
+  docker push <dockerhub_username>/<your_app_name>:latest
+
+
+9. PULL THE IMAGE FROM DOCKER HUB
+---------------------------------
+On another machine or after deleting your image, pull it with:
+
+  docker pull <dockerhub_username>/<your_app_name>:latest
+
+
+10. RUN THE DOCKER IMAGE
+------------------------
+Run the image with port mapping:
+
+  docker run -p 5000:5000 <dockerhub_username>/<your_app_name>:latest
+
+
+11. SAMPLE FLASK APP (app.py)
+-----------------------------
+  from flask import Flask
+  app = Flask(__name__)
+
+  @app.route('/')
+  def home():
+      return "Hello from Docker!"
+
+  if __name__ == "__main__":
+      app.run(host='0.0.0.0', port=5000)
+
+
+DONE! 🚀 Now your app runs in Docker.
